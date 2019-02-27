@@ -1,0 +1,82 @@
+  # global config v1
+  global:
+    scrape_interval:     15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+    evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+    # scrape_timeout is set to the global default (10s).
+
+    # Attach these labels to any time series or alerts when communicating with
+    # external systems (federation, remote storage, Alertmanager).
+    # external_labels:
+    #     clustername: '{{ cluster_name }}'
+
+
+  # Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+  rule_files:
+    - "alerts/*.rules"
+
+  # alerting:
+  #   alertmanagers:
+  #     - static_configs:
+  #       - targets: ['prometheus-alertmanager.wst:27093']
+
+  # A scrape configuration containing exactly one endpoint to scrape:
+  # Here it's Prometheus itself.
+  # scrape_configs:
+  #   # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  #   - job_name: 'metrics'
+
+  #     # metrics_path defaults to '/metrics'
+  #     # scheme defaults to 'http'.
+  #     honor_labels: true
+  #     static_configs:
+  #       - targets: ['{{ svc_push_gateway }}', '{{ svc_pushprom }}']
+  #     metric_relabel_configs:
+  #       - source_labels: [cluster_name]
+  #         regex: (.*)
+  #         target_label: clustername
+  #         replacement: ${1}
+
+  #   - job_name: 'services'
+  #     scrape_timeout: 18s
+  #     scrape_interval: 20s
+  #     metrics_path: /probe
+  #     params:
+  #       cluster: ["{{ cluster_name }}"]
+  #       pattern: [".*"]
+  #     static_configs:
+  #       - targets: ['{{ svc_script_exporter }}']
+  #     metric_relabel_configs:
+  #       - source_labels: [script]
+  #         regex: (.*)
+  #         target_label: instance
+  #         replacement: ${1}
+
+  scrape_configs:
+    # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+    # - job_name: 'metrics'
+
+    #   # metrics_path defaults to '/metrics'
+    #   # scheme defaults to 'http'.
+    #   honor_labels: true
+    #   static_configs:
+    #     - targets: ['{{ svc_push_gateway }}', '{{ svc_pushprom }}']
+    #   metric_relabel_configs:
+    #     - source_labels: [cluster_name]
+    #       regex: (.*)
+    #       target_label: clustername
+    #       replacement: ${1}
+
+    - job_name: 'services'
+      scrape_timeout: 18s
+      scrape_interval: 20s
+      metrics_path: /probe
+      params:
+        cluster: ["shanghai"]
+        pattern: [".*"]
+      static_configs:
+        - targets: ['10.19.140.200:29302']
+      metric_relabel_configs:
+        - source_labels: [script]
+          regex: (.*)
+          target_label: instance
+          replacement: ${1}

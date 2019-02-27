@@ -1,0 +1,9 @@
+# Services
+ALERT Service_Error
+  IF script_success{job="services"} == 2 or script_success{job="services"} == -1
+  FOR 2m
+  LABELS { severity = "critical", type="service" }
+  ANNOTATIONS {
+    summary = "{{ $labels.job }}-{{ $labels.instance }} unavailable",
+    description = "{{ $labels.job }}-{{ $labels.instance }} is in trouble for more than 2 minutes"
+  }

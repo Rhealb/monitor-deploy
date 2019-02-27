@@ -1,0 +1,40 @@
+pod:
+  cc-itg:
+    team: console
+    topicId: 14
+  pod2:
+    team: ops
+    topicId: 16
+  pod3:
+    team: k8s
+    topicId: 15
+  pod4:
+    team: bigdata
+    topicId: 15
+  pod5:
+    team: monitor
+    topicId: 13
+node:
+  default:
+    team: ops
+    topicId: 16
+service:
+  console:
+    team: console
+    topicId: 14
+  bigdata:
+    team: bigdata
+    topicId: 15
+  ops:
+    team: ops
+    topicId: 16
+  k8s:
+    team: k8s
+    topicId: 12
+  monitor:
+    team: monitor
+    topicId: 13
+default:
+  default:
+    team: default
+    topicId: 10

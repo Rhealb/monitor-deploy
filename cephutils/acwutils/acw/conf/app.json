@@ -1,0 +1,10 @@
+{
+    "app_name": "monitor web config api",
+    "base_url": "http://localhost:8090",
+    "port": 8090,
+    "verbose": false,
+    "static_dir": "/opt/admin-center-web/static",
+    "view_dir": "/opt/admin-center-web/views",
+    "database": "mysql",
+    "database_conn": "root:enncloud@tcp(prometheus-mysql1.wst:3306)/prometheus?charset=utf8&parseTime=true"
+}

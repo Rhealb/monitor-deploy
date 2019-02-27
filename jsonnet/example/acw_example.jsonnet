@@ -1,0 +1,97 @@
+{
+  // mysql deploy global variables
+
+  local globalconf = import "global_config.jsonnet",
+  local deploytype = globalconf.deploytype,
+  local ceph = globalconf.ceph,
+
+  local acwstorages = (import "../acw/deploy/acwstorage_deploy.jsonnet") + {
+    _namespace:: globalconf.namespace,
+    _suiteprefix:: globalconf.suiteprefix,
+    _mountdevtype:: globalconf.mountdevtype,
+    _utilsstoretype:: globalconf.utilsstoretype,
+  },
+
+  local acwpodservice = (import "../acw/deploy/acwpodservice_deploy.jsonnet") + {
+    _namespace:: globalconf.namespace,
+    _suiteprefix:: globalconf.suiteprefix,
+    _externalips:: globalconf.externalips,
+    _utilsstoretype:: globalconf.utilsstoretype,
+    local acw = globalconf.acw,
+    _acwexservicetype:: acw.exservicetype,
+    _acwdockerimage:: acw.image,
+    _acwexternalports:: acw.externalports,
+    _acwnodeports:: acw.nodeports,
+    _acwinstancecount:: acw.instancecount,
+    _acwreplicas:: acw.replicas,
+    _acwrequestcpu:: acw.requestcpu,
+    _acwrequestmem:: acw.requestmem,
+    _acwlimitcpu:: acw.limitcpu,
+    _acwlimitmem:: acw.limitmem,
+    _script_exporter:: acw.scriptexporter,
+    _automation:: acw.automation,
+    _alert_manager:: acw.alertmanager,
+    _config_service_server:: acw.configserviceserver,
+    _storage_type:: acw.storagetype,
+    _s3bucket:: acw.s3bucket,
+    _Timeout:: acw.Timeout,
+  },
+
+  local automationpodservice = (import "../automation/deploy/automationpodservice_deploy.jsonnet") + {
+    _namespace:: globalconf.namespace,
+    _suiteprefix:: globalconf.suiteprefix,
+    _externalips:: globalconf.externalips,
+    _utilsstoretype:: globalconf.utilsstoretype,
+    local automation = globalconf.automation,
+    _automationexservicetype:: automation.exservicetype,
+    _automationdockerimage:: automation.image,
+    _automationexternalports:: automation.externalports,
+    _automationnodeports:: automation.nodeports,
+    _automationinstancecount:: automation.instancecount,
+    _automationreplicas:: automation.replicas,
+    _automationrequestcpu:: automation.requestcpu,
+    _automationrequestmem:: automation.requestmem,
+    _automationlimitcpu:: automation.limitcpu,
+    _automationlimitmem:: automation.limitmem,
+    _workspace:: automation.workspace,
+    _cephpath:: automation.cephpath,
+    _mysql_server:: automation.mysqlserver,
+    _alert_manager:: automation.alertmanager,
+    _storage_type:: automation.storagetype,
+    _s3bucket:: automation.s3bucket,
+    _Timeout:: automation.Timeout,
+  },
+
+  local scriptexporterpodservice = (import "../scriptexporter/deploy/scriptexporterpodservice_deploy.jsonnet") + {
+    _namespace:: globalconf.namespace,
+    _suiteprefix:: globalconf.suiteprefix,
+    _externalips:: globalconf.externalips,
+    _utilsstoretype:: globalconf.utilsstoretype,
+    local scriptexporter = globalconf.scriptexporter,
+    _scriptexporterexservicetype:: scriptexporter.exservicetype,
+    _scriptexporterdockerimage:: scriptexporter.image,
+    _scriptexporterexternalports:: scriptexporter.externalports,
+    _scriptexporternodeports:: scriptexporter.nodeports,
+    _scriptexporterinstancecount:: scriptexporter.instancecount,
+    _scriptexporterreplicas:: scriptexporter.replicas,
+    _scriptexporterrequestcpu:: scriptexporter.requestcpu,
+    _scriptexporterrequestmem:: scriptexporter.requestmem,
+    _scriptexporterlimitcpu:: scriptexporter.limitcpu,
+    _scriptexporterlimitmem:: scriptexporter.limitmem,
+    _workspace:: scriptexporter.workspace,
+    _cephpath:: scriptexporter.cephpath,
+    _mysql_server:: scriptexporter.mysqlserver,
+    _storage_type:: scriptexporter.storagetype,
+    _s3bucket:: scriptexporter.s3bucket,
+    _Timeout:: scriptexporter.Timeout,
+  },
+
+  kind: "List",
+  apiVersion: "v1",
+  items: if deploytype == "storage" then
+           acwstorages.items
+         else if deploytype == "podservice" then
+           acwpodservice.items + automationpodservice.items + scriptexporterpodservice.items
+         else
+           error "Unknow deploytype",
+}

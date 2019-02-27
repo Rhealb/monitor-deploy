@@ -1,0 +1,68 @@
+{
+    "apiVersion": "extensions/v1beta1",
+    "kind": "Deployment",
+    "metadata": {
+        "name": "bigdata-%NAME%",
+        "namespace": "%NAMESPACE%",
+        "labels": {
+            "app": "bigdata-%NAME%-pod",
+            "name": "bigdata-%NAME%"
+        }
+    },
+    "spec": {
+        "replicas": 1,
+        "selector": {
+            "matchLabels": {
+                "app": "bigdata-%NAME%-pod",
+                "name": "bigdata-%NAME%"
+            }
+        },
+        "template": {
+            "metadata": {
+                "labels": {
+                    "app": "bigdata-%NAME%-pod",
+                    "name": "bigdata-%NAME%"
+                }
+            },
+            "spec": {
+                "storage": [
+                    {
+                        "name": "%COMPONENTCEPHUTILS%"
+                    }
+                ],
+                "containers": [
+                    {
+                        "name": "bigdata-%NAME%",
+                        "image": "%REGISTRY%/tools/he2-centos7-jdk8:0.2",
+                        "command": [
+                            "tail",
+                            "-f",
+                            "/etc/hosts"
+                        ],
+                        "resources": {
+                            "limits": {
+                                "cpu": "500m",
+                                "memory": "1Gi"
+                            },
+                             "requests": {
+                                "cpu": "500m",
+                                "memory": "1Gi"
+                            }
+                        },
+                        "volumeMounts": [
+                            {
+                                "name": "%COMPONENTCEPHUTILS%",
+                                "mountPath": "/opt/mntcephutils"
+                            }
+                        ],
+                        "imagePullPolicy": "IfNotPresent",
+                        "securityContext": {
+                            "privileged": false
+                        }
+                    }
+                ],
+                "restartPolicy": "Always"
+            }
+        }
+     }
+}
